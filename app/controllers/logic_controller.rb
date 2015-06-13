@@ -2,10 +2,10 @@ class LogicController < ApplicationController
   @@total = []
   @@my_move = []
   def ping
-  	respond_to do |format|
-  		format.html { render notice: "Hey dude"}
-  		format.json { render json: params[:q].scan(/\d+/) }
-  	end
+    
+    @@total = []
+
+  	render json: '{"ok": true}'
   end
 
   def start
@@ -14,29 +14,26 @@ class LogicController < ApplicationController
 
   	@@g.times do |i|
       @@g.times do |j|
-  		    @@total << [i,j]
+  		    @@total << [i+1,j+1]
       end
     end
-
+    
 
   	@@y = [params[:y][0].to_i,params[:y][2].to_i]
   	@@total.delete(@@y)
 
   	@@o = [params[:o][0].to_i,params[:o][2].to_i]
-  	@@total.delete(@@o)
 
   	@@my_move = @@y # my intial move
 
-  	respond_to do |format|
-  		format.html
-  		format.json { render json: "this is start"}
-  	end
+  	render json: '{"ok": true}' 
+
   end
 
   def play
   	@available_moves = []
     @current_position = []
-	  @y_adj = []
+	@y_adj = []
   	@o_adj = []
     @m_adj = []
 
@@ -45,15 +42,16 @@ class LogicController < ApplicationController
   	@m = [params[:m][0].to_i, params[:m][2].to_i]   #move of oponent
     self.class.class_variable_get(:@@total).delete(@m)                             #update the total moves
 
-
+    self.class.class_variable_get(:@@total).delete(@@o)
 
   	(@m[0]-1).upto(@m[0]+1) do |i|
   		(@m[1]-1).upto(@m[1]+1) do |j|
   			if @@total.include?([i,j])
-          @m_adj << [i,j]	# opponent neighbours
+              @m_adj << [i,j]	# opponent neighbours
+            end
         end
-      end
   	end
+    
 
   	(@@my_move[0]-1).upto(@@my_move[0]+1) do |i|
   		(@@my_move[1]-1).upto(@@my_move[1]+1) do |j|
@@ -63,12 +61,14 @@ class LogicController < ApplicationController
   		end
   	end
 
+  	
   	@available_moves = @o_adj
+
 
   	if @o_adj.include?([@m])
   		@current_position = @m
-  		@@my_move = @current_position  # update my move
-      byebug
+  		
+      
     else
   		@m_adj.length.times do |i|
   			if @o_adj.include? @m_adj[i]
@@ -78,11 +78,13 @@ class LogicController < ApplicationController
       @current_position = @available_moves[rand(@available_moves.length)]
     end
 
+
+
   	@@total.delete(@current_position)
 
-  	respond_to do |format|
-  		format.html
-  		format.json { render json:  @current_position }
-  	end
+
+  	
+  	render json: {m: "#{@current_position[0]}|#{@current_position[1]}"}
+  	
   end
 end
