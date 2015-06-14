@@ -46,7 +46,7 @@ class LogicController < ApplicationController
 	@y_adj = []
   	@o_adj = []
     @m_adj = []
-
+    @least = []
 
 
   	@m = [params[:m][0].to_i, params[:m][2].to_i]   #move of oponent
