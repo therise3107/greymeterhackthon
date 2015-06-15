@@ -8,7 +8,7 @@ class LogicController < ApplicationController
 
   def ping
     @@total = []
-	render json: '{"ok": true}'
+	  render json: '{"ok": true}'
   end
 
   def start
@@ -43,13 +43,13 @@ class LogicController < ApplicationController
   def play
   	#@available_moves = []
     
-    @current_position = []								# array initializatoin						
+    @current_position = []					# array initializatoin						
 	  @y_adj = []											# array initializatoin
   	@o_adj = []											# array initializatoin
     @m_adj = []											# array initializatoin				
     @least = []											# array initializatoin
 
-    @my_move = @current_position || @@y
+    @my_move = @current_position.empty? || @@y
 
   	@m = [params[:m][0].to_i, params[:m][2].to_i]   	# oponent move
     
