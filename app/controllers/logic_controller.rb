@@ -34,7 +34,7 @@ class LogicController < ApplicationController
   														# available positions							
   														# self.class refers to the current class
   	
-  	@@my_move = @@y 									# my intial move
+  										# my intial move
 
   	render json: '{"ok": true}' 
 
@@ -44,31 +44,26 @@ class LogicController < ApplicationController
   	#@available_moves = []
     
     @current_position = []								# array initializatoin						
-	@y_adj = []											# array initializatoin
+	  @y_adj = []											# array initializatoin
   	@o_adj = []											# array initializatoin
     @m_adj = []											# array initializatoin				
     @least = []											# array initializatoin
 
+    @my_move = @current_position || @@y
 
   	@m = [params[:m][0].to_i, params[:m][2].to_i]   	# oponent move
     
 
     # finding all the possible next moves of the oponent
     # opponent neighbours          
-  	(@m[0]-1).upto(@m[0]+1) do |i|
-  		(@m[1]-1).upto(@m[1]+1) do |j|
-  			@m_adj << [i,j] if self.class.class_variable_get(:@@total).include?([i,j]) 
-        end
-  	end
+  	find_neighbour(@m,@m_adj)
+
 
 	# construncting all the possible next moves for us  	
 	# my neighbours
-  	(@@my_move[0]-1).upto(@@my_move[0]+1) do |i|
-  		(@@my_move[1]-1).upto(@@my_move[1]+1) do |j|
-        	@o_adj << [i,j] if self.class.class_variable_get(:@@total).include?([i,j])        	  							
-        end
-  	end
+  	find_neighbour(@@my_move,@o_adj)
 
+    
   	
   	#@available_moves = @o_adj
 
@@ -88,7 +83,7 @@ class LogicController < ApplicationController
     end
 
 
-   	@current_position
+   	
     
   	self.class.class_variable_get(:@@total).delete(@m) 
   	self.class.class_variable_get(:@@total).delete(@current_position)
@@ -97,5 +92,17 @@ class LogicController < ApplicationController
 # => Return the server friendly response back to the server  		
   	render json: {m: "#{@current_position[0]}|#{@current_position[1]}"}
   	
+  end
+
+  private
+
+  def find_neighbour(node,neighbour_nodes)
+    (node[0]-1).upto(node[0]+1) do |i|
+      (node[1]-1).upto(node[1]+1) do |j|
+          neighbour_nodes << [i,j] if self.class.class_variable_get(:@@total).include?([i,j])                          
+        end
+    end
+
+    
   end
 end
