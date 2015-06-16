@@ -77,7 +77,7 @@ You can see the reply of any of the games in the âGames Arenaâ tab.
 
 ## Result
 
-  the api was faster than any of opponent team the avg response time of app was 23ms the next best response time was 54ms (node.js) 
+  the api was faster than any of opponent team the avg response time of app was 23ms the next best response time was 54ms (node.js) . Though i did not win the hackthon but it was quite satisfying! 
 
 
 
